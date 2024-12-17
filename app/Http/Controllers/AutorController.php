@@ -26,9 +26,7 @@ class AutorController extends Controller
     // Salvar novo livro no banco
     public function store(Request $request)
     {
-        $request->validate([
-            'str_nome' => 'required|string|max:40',
-        ]);
+        $request->validate($this->getValidatorInput(), $this->getValidatorMessage());
 
         $autor = Autor::create($request->all());
 
@@ -60,9 +58,7 @@ class AutorController extends Controller
     // Atualizar livro no banco
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'str_nome' => 'required|string|max:255',
-        ]);
+        $request->validate($this->getValidatorInput(), $this->getValidatorMessage());
 
         $autor = Autor::findOrFail($id);
         $autor->update($request->all());
@@ -77,5 +73,19 @@ class AutorController extends Controller
         $autor->delete();
 
         return redirect()->route('autores.index')->with('success', 'Autor excluído com sucesso!');
+    }
+
+    private function getValidatorInput()
+    {
+        return [
+            'str_nome' => 'required|string|max:40',
+        ];
+    }
+
+    private function getValidatorMessage()
+    {
+        return [
+            'str_nome.max' => 'O campo Nome do Autor(a) deve conter no máximo 40 caracteres.',
+        ];
     }
 }

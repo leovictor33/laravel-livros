@@ -31,14 +31,7 @@ class LivroController extends Controller
     // Salvar novo livro no banco
     public function store(Request $request)
     {
-        $request->validate([
-            'str_titulo'         => 'required|string|max:40',
-            'str_editora'        => 'required|string|max:40',
-            'num_edicao'         => 'required|integer',
-            'num_ano_publicacao' => 'required|integer|min:1900|max:' . date('Y'),
-            'autores'            => 'required|array',
-            'assuntos'           => 'required|array',
-        ]);
+        $request->validate($this->getValidatorInput(), $this->getValidatorMessage());
 
         $arrData = $request->all();
         $arrData = $this->formatFields($arrData);
@@ -94,20 +87,7 @@ class LivroController extends Controller
     public function update(Request $request, $id)
     {
         // Validação dos dados
-        $request->validate([
-            'str_titulo'         => 'required|string|max:40',
-            'str_editora'        => 'required|string|max:40',
-            'num_edicao'         => 'required|integer',
-            'num_ano_publicacao' => 'required|integer|min:1900|max:' . date('Y'),
-            'autores'            => 'array',
-            'assuntos'           => 'array',
-        ],
-            [
-                'num_ano_publicacao.required' => 'O campo Ano de Publicação é obrigatório.',
-                'num_ano_publicacao.integer'  => 'O Ano de Publicação deve ser um número inteiro.',
-                'num_ano_publicacao.min'      => 'O Ano de Publicação deve ser no mínimo 1900.',
-                'num_ano_publicacao.max'      => 'O Ano de Publicação não pode ser maior que o ano atual.',
-            ]);
+        $request->validate($this->getValidatorInput(), $this->getValidatorMessage());
 
         // Buscar o livro para atualização
         $livro = Livro::findOrFail($id);
@@ -163,15 +143,42 @@ class LivroController extends Controller
     }
 
 
-    public function gerarRelatorioLivrosPorAssunto(Assunto $assunto)
+//    public function gerarRelatorioLivrosPorAssunto(Assunto $assunto)
+//    {
+//        $livros = $assunto->livros()->with(['autores', 'assuntos'])->get();
+//
+//        $pdf = SnappyPdf::loadView('relatorios.livros_por_assunto', compact('livros', 'assunto'));
+//
+//        // Configurando o cabeçalho para forçar o download
+//        return response($pdf->output(), 200)
+//            ->header('Content-Type', 'application/pdf')
+//            ->header('Content-Disposition', 'attachment; filename="livros_por_' . $assunto->str_descricao . '.pdf"');
+//    }
+
+    private function getValidatorInput()
     {
-        $livros = $assunto->livros()->with(['autores', 'assuntos'])->get();
+        return [
+            'str_titulo'         => 'required|string|max:40',
+            'str_editora'        => 'required|string|max:40',
+            'num_edicao'         => 'required|integer',
+            'num_ano_publicacao' => 'required|integer|min:1900|max:' . date('Y'),
+            'autores'            => 'array',
+            'assuntos'           => 'array',
+        ];
+    }
 
-        $pdf = SnappyPdf::loadView('relatorios.livros_por_assunto', compact('livros', 'assunto'));
-
-        // Configurando o cabeçalho para forçar o download
-        return response($pdf->output(), 200)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="livros_por_' . $assunto->str_descricao . '.pdf"');
+    private function getValidatorMessage()
+    {
+        return [
+            'num_ano_publicacao.required' => 'O campo Ano de Publicação é obrigatório.',
+            'num_ano_publicacao.integer'  => 'O Ano de Publicação deve ser um número inteiro.',
+            'num_ano_publicacao.min'      => 'O Ano de Publicação deve ser no mínimo 1900.',
+            'num_ano_publicacao.max'      => 'O Ano de Publicação não pode ser maior que o ano atual.',
+            'str_titulo.required'         => 'O campo Título é obrigatório.',
+            'str_titulo.max'              => 'O campo Título deve conter no máximo 40 caracteres.',
+            'str_editora.required'        => 'O campo Título é obrigatório.',
+            'str_editora.max'             => 'O campo Título deve conter no máximo 40 caracteres.',
+            'num_edicao.required'         => 'O campo Edição é obrigatório.',
+        ];
     }
 }

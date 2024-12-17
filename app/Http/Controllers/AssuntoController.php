@@ -21,9 +21,7 @@ class AssuntoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'str_descricao' => 'required|string|max:255',
-        ]);
+        $request->validate($this->getValidatorInput(), $this->getValidatorMessage());
 
         $assunto = Assunto::create($request->all());
 
@@ -52,9 +50,7 @@ class AssuntoController extends Controller
 
     public function update(Request $request, $codigo)
     {
-        $request->validate([
-            'str_descricao' => 'required|string|max:255',
-        ]);
+        $request->validate($this->getValidatorInput(), $this->getValidatorMessage());
 
         $assunto = Assunto::findOrFail($codigo);
         $assunto->update($request->all());
@@ -68,5 +64,19 @@ class AssuntoController extends Controller
         $assunto->delete();
 
         return redirect()->route('assuntos.index')->with('success', 'Assunto excluído com sucesso!');
+    }
+
+    private function getValidatorInput()
+    {
+        return [
+            'str_descricao' => 'required|string|max:20',
+        ];
+    }
+
+    private function getValidatorMessage()
+    {
+        return [
+            'str_descricao.max' => 'O campo Descrição deve conter no máximo 20 caracteres.',
+        ];
     }
 }
