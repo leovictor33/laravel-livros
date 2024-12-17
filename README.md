@@ -127,7 +127,7 @@ Para rodar os testes automatizados, utilize o comando:
 ## Contato
 Caso tenha dúvidas ou sugestões, entre em contato:
 - **Nome**: Leonnardo Araújo
-- **E-mail**: leovictor33@gmailcom
+- **E-mail**: leovictor33@gmail.com
 - **LinkedIn**: [leovictor33](https://www.linkedin.com/in/leovictor33)
 
 ---
