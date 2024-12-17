@@ -72,6 +72,12 @@ Caso queira adicionar dados iniciais:
 ./vendor/bin/sail php artisan db:seed
 ```
 
+### 8. Execute os testes (TDD)
+Para rodar os testes automatizados, utilize o comando:
+```bash
+./vendor/bin/sail artisan test
+```
+
 ---
 
 ## Funcionalidades
