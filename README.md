@@ -33,7 +33,7 @@ cp .env.example .env
 Abra o arquivo `.env` e configure as variáveis do PostgreSQL:
 ```env
 DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1
+DB_HOST=pgsql
 DB_PORT=5432
 DB_DATABASE=<nome-do-banco>
 DB_USERNAME=<usuario>
