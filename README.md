@@ -131,5 +131,3 @@ Caso tenha dúvidas ou sugestões, entre em contato:
 - **LinkedIn**: [leovictor33](https://www.linkedin.com/in/leovictor33)
 
 ---
-
-**Bom desenvolvimento! 🚀**
