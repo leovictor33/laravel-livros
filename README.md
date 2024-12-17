@@ -72,7 +72,13 @@ Caso queira adicionar dados iniciais:
 ./vendor/bin/sail php artisan db:seed
 ```
 
-### 8. Execute os testes (TDD)
+### 8. Refresh popule o banco de dados (opcional)
+Caso queira limpar e adicionar dados novamente:
+```bash
+./vendor/bin/sail php artisan migrate:refresh --seed
+```
+
+### 9. Execute os testes (TDD)
 Para rodar os testes automatizados, utilize o comando:
 ```bash
 ./vendor/bin/sail artisan test
