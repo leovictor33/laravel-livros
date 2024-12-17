@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('str_editora', 40)->nullable();
             $table->integer('num_edicao')->nullable();
             $table->integer('num_ano_publicacao')->nullable();
+            $table->decimal('num_valor', 15, 2)->nullable();
             $table->timestamps(); // Cria as colunas 'created_at' e 'updated_at'
         });
     }
