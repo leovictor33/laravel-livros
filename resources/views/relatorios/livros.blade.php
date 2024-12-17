@@ -30,12 +30,20 @@
             font-size: 18px;
             font-weight: bold;
         }
+        /*Style utilizado para a quebra correta do thead para cada página necessária*/
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
     </style>
 </head>
 <body>
 <h1>Relatório de Livros</h1>
 @foreach ($autores as $autor)
-    <div class="author">Autor: {{ $autor->str_nome }}</div>
+    <div class="author author-section">Autor: {{ $autor->str_nome }}</div>
     <table>
         <thead>
         <tr>

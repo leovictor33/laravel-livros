@@ -30,6 +30,14 @@
             font-size: 18px;
             font-weight: bold;
         }
+        /*Style utilizado para a quebra correta do thead para cada página necessária*/
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
     </style>
 </head>
 <body>

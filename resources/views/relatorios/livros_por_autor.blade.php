@@ -19,6 +19,14 @@
         th {
             background-color: #f4f4f4;
         }
+        /*Style utilizado para a quebra correta do thead para cada página necessária*/
+        thead {
+            display: table-header-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
     </style>
 </head>
 <body>
