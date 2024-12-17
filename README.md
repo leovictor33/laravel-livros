@@ -1,67 +1,129 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Projeto Laravel 11.x com Docker e PostgreSQL
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Descrição
+Este é um projeto Laravel 11.x que implementa três CRUDs:
+- **Livros**
+- **Autores**
+- **Assuntos**
 
-## About Laravel
+O projeto inclui funcionalidades de geração de relatórios PDF:
+1. **Livros**: Relatório gerado com todos os livros agrupados por autores.
+2. **Autores e Assuntos**: Relatório gerado em ações individuais de cada registro em suas respectivas funcionalidades.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requisitos
+- **Docker** instalado e configurado.
+- **Composer** para gerenciamento de dependências.
+- **PostgreSQL** para banco de dados.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Instalação e Execução do Projeto
 
-## Learning Laravel
+### 1. Clone o repositório
+```bash
+git clone https://github.com/leovictor33/laravel-livros.git
+cd laravel-livros
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Configure o ambiente
+Copie o arquivo de exemplo `.env` e configure suas credenciais do banco de dados:
+```bash
+cp .env.example .env
+```
+Abra o arquivo `.env` e configure as variáveis do PostgreSQL:
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=<nome-do-banco>
+DB_USERNAME=<usuario>
+DB_PASSWORD=<senha>
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 3. Instale as dependências
+Execute o comando a seguir para instalar as dependências via Composer:
+```bash
+docker run --rm --interactive --tty \
+  --volume $PWD:/app \
+  --user $(id -u):$(id -g) \
+  composer install
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. Suba os containers com Laravel Sail
+```bash
+./vendor/bin/sail up
+```
+> O projeto ficará acessível em `http://localhost`.
 
-## Laravel Sponsors
+### 5. Gere a chave da aplicação
+```bash
+./vendor/bin/sail php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 6. Execute as migrações
+Para construir a estrutura do banco de dados:
+```bash
+./vendor/bin/sail php artisan migrate
+```
 
-### Premium Partners
+### 7. Popule o banco de dados (opcional)
+Caso queira adicionar dados iniciais:
+```bash
+./vendor/bin/sail php artisan db:seed
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## Funcionalidades
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### CRUDs Implementados
+1. **Livros**
+    - Gerenciamento de livros.
+    - Relatório PDF: Lista todos os livros agrupados por autores.
 
-## Code of Conduct
+2. **Autores**
+    - Gerenciamento de autores.
+    - Relatório PDF: Gerado individualmente por registro.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. **Assuntos**
+    - Gerenciamento de assuntos.
+    - Relatório PDF: Gerado individualmente por registro.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Comandos úteis
+### Subir o projeto em background
+```bash
+./vendor/bin/sail up -d
+```
 
-## License
+### Parar os containers
+```bash
+./vendor/bin/sail down
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# laravel-livros
+### Acessar o terminal do container
+```bash
+./vendor/bin/sail shell
+```
+
+---
+
+## Tecnologias Utilizadas
+- **Laravel 11.x**
+- **Docker + Laravel Sail**
+- **PostgreSQL**
+- **Composer**
+- **Biblioteca wkhtmltopdf** (para geração de relatórios em PDF)
+
+---
+
+## Contato
+Caso tenha dúvidas ou sugestões, entre em contato:
+- **Nome**: Leonnardo Araújo
+- **E-mail**: leovictor33@gmailcom
+- **LinkedIn**: [leovictor33](https://www.linkedin.com/in/leovictor33)
+
+---
+
+**Bom desenvolvimento! 🚀**
