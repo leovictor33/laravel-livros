@@ -27,6 +27,4 @@ Route::get('/relatorio/livros/por-assunto/{assuntoId}', [RelatorioController::cl
 
 Route::get('autores/{autor}/relatorio', [LivroController::class, 'gerarRelatorioLivrosPorAutor'])
     ->name('autores.relatorio');
-//Route::get('assuntos/{assunto}/relatorio', [LivroController::class, 'gerarRelatorioLivrosPorAssunto'])
-//    ->name('assuntos.relatorio');
 
