@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assunto;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use App\Models\Autor;
 use Illuminate\Support\Facades\DB;
@@ -15,25 +16,22 @@ class RelatorioController extends Controller
 
         $pdf = SnappyPdf::loadView('relatorios.livros', compact('autores'))
             ->setOption('enable-local-file-access', true)
-            ->setPaper('a4', 'portrait'); // Definindo o tamanho e orientação do papel
+            ->setPaper('a4', 'portrait');
 
         return $pdf->download('relatorio_livros.pdf');
     }
 
     public function gerarRelatorioPorAssunto($assuntoId)
     {
-        // Consultando os dados da view "livros_por_assunto" no PostgreSQL
-        // A view já deve ser configurada para agrupar livros por assunto
+        $assunto = Assunto::findOrFail($assuntoId);
         $livros = DB::table('livros_por_assunto')
             ->where('assunto_id', $assuntoId)
             ->get();
-
-        // Gerando o PDF a partir da view 'relatorios.livros_assunto'
-        $pdf = SnappyPdf::loadView('relatorios.livros_assunto_view', compact('livros'))
+        $strAssunto = $assunto->str_descricao;
+        $pdf = SnappyPdf::loadView('relatorios.livros_assunto_view', compact('livros', 'strAssunto'))
             ->setOption('enable-local-file-access', true)
-            ->setPaper('a4', 'portrait'); // Definindo o tamanho e orientação do papel
+            ->setPaper('a4', 'portrait');
 
-        // Retornando o PDF para download
-        return $pdf->download('relatorio_livros_por_assunto.pdf');
+        return $pdf->download('Livros_sobre_' . $strAssunto . '.pdf');
     }
 }
