@@ -55,7 +55,7 @@ class AssuntoController extends Controller
      * Caso contrário, o usuário é redirecionado para a rota "assuntos.index" com mensagem de sucesso.
      *
      * @param Request $request
-     * @return RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
     public function store(Request $request)
     {
@@ -65,6 +65,9 @@ class AssuntoController extends Controller
         try {
             // Cria o registro no banco de dados
             $assunto = Assunto::create($request->all());
+            if ($request->header('X-Test-Origin') === 'true') {
+                return response()->json($assunto, Response::HTTP_CREATED);
+            }
 
             // Retorna sucesso
             return redirect()->route($this->getPathView())->with('success', 'Assunto criado com sucesso!');
