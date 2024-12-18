@@ -142,19 +142,6 @@ class LivroController extends Controller
             ->header('Content-Disposition', 'attachment; filename="livros_por_' . $autor->str_nome . '.pdf"');
     }
 
-
-//    public function gerarRelatorioLivrosPorAssunto(Assunto $assunto)
-//    {
-//        $livros = $assunto->livros()->with(['autores', 'assuntos'])->get();
-//
-//        $pdf = SnappyPdf::loadView('relatorios.livros_por_assunto', compact('livros', 'assunto'));
-//
-//        // Configurando o cabeçalho para forçar o download
-//        return response($pdf->output(), 200)
-//            ->header('Content-Type', 'application/pdf')
-//            ->header('Content-Disposition', 'attachment; filename="livros_por_' . $assunto->str_descricao . '.pdf"');
-//    }
-
     private function getValidatorInput()
     {
         return [
