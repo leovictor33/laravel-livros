@@ -4,16 +4,22 @@ namespace App\Contracts;
 interface Validatable
 {
     /**
-     * Obter as regras de validação para os dados de entrada do modelo.
+     * Retorna as regras de validação para os dados de entrada do modelo.
      *
-     * @return array
+     * Define as restrições de validação aplicáveis, como obrigatoriedade, tipo de dado,
+     * e limite de caracteres para os campos especificados.
+     *
+     * @return array Um array associativo contendo as regras de validação.
      */
-    public function getValidatorInput();
+    public function getValidatorInput(): array;
 
     /**
-     * Obter as mensagend de validação para os dados de entrada do modelo.
+     * Retorna as mensagens de validação personalizadas para o processo de validação dos dados de entrada.
      *
-     * @return array
+     * Essa configuração específica mensagens de erro para campos específicos, como o campo "str_descricao",
+     * limitando o seu tamanho máximo a 20 caracteres.
+     *
+     * @return array Um array associativo contendo os atributos e suas respectivas mensagens de validação.
      */
-    public function getValidatorMessage();
+    public function getValidatorMessage(): array;
 }
