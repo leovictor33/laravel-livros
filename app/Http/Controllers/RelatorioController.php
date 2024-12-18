@@ -6,7 +6,6 @@ use App\Models\Assunto;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use App\Models\Autor;
 use Illuminate\Support\Facades\DB;
-use Knp\Snappy\Pdf;
 
 class RelatorioController extends Controller
 {

@@ -11,14 +11,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LivroController extends Controller
 {
-    // Listar todos os livros
     public function index()
     {
         $livros = Livro::all();
         return view('livros.index', compact('livros'));
     }
 
-    // Mostrar o formulário de criação
     public function create()
     {
         $autores = Autor::orderBy('str_nome', 'asc')->get(); // Ordena os autores
@@ -28,7 +26,6 @@ class LivroController extends Controller
     }
 
 
-    // Salvar novo livro no banco
     public function store(Request $request)
     {
         $request->validate($this->getValidatorInput(), $this->getValidatorMessage());
@@ -59,8 +56,6 @@ class LivroController extends Controller
         return redirect()->route('livros.index')->with('success', 'Livro criado com sucesso!');
     }
 
-
-    // Mostrar detalhes de um livro
     public function show($id)
     {
         $livro = Livro::with(['autores', 'assuntos'])->findOrFail($id);
@@ -68,7 +63,6 @@ class LivroController extends Controller
         return view('livros.show', compact('livro'));
     }
 
-    // Mostrar formulário de edição
     public function edit($id)
     {
         // Busca o livro pelo ID
@@ -82,8 +76,6 @@ class LivroController extends Controller
         return view('livros.edit', compact('livro', 'autores', 'assuntos'));
     }
 
-
-    // Atualizar livro no banco
     public function update(Request $request, $id)
     {
         // Validação dos dados
@@ -111,7 +103,6 @@ class LivroController extends Controller
         return redirect()->route('livros.index')->with('success', 'Livro atualizado com sucesso!');
     }
 
-    // Excluir livro
     public function destroy($id)
     {
         $livro = Livro::findOrFail($id);

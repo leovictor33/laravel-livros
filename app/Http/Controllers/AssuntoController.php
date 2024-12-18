@@ -25,7 +25,6 @@ class AssuntoController extends Controller
 
         $assunto = Assunto::create($request->all());
 
-        // Verifica se é uma requisição de teste
         if ($request->header('X-Test-Origin') === 'true') {
             return response()->json($assunto, Response::HTTP_CREATED);
         }
@@ -36,8 +35,7 @@ class AssuntoController extends Controller
     public function show($id)
     {
         $assunto = Assunto::findOrFail($id);
-        // Carregar livros associados ao assunto, se necessário
-        $livros = $assunto->livros; // Supondo que exista um relacionamento 'livros' em Autor
+        $livros = $assunto->livros;
 
         return view('assuntos.show', compact('assunto', 'livros'));
     }
