@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Assunto;
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use InvalidArgumentException as InvalidArgumentExceptionAlias;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -17,12 +19,22 @@ class AssuntoController extends Controller
 {
     /**
      * Recupera uma lista de Assunto ordenada pela sua descrição em ordem crescente
-     *  e retorna a visualização do índice de assuntos com os dados.
+     *   e retorna a visualização do índice de assuntos com os dados.
+     * @return Factory|\Illuminate\Contracts\View\View|Application|RedirectResponse
      */
     public function index()
     {
-        $assuntos = Assunto::orderBy('str_descricao', 'asc')->get();
-        return view('assuntos.index', compact('assuntos'));
+        try {
+            // Recupera todos os registros de assuntos ordenados por descrição
+            $assuntos = Assunto::orderBy('str_descricao', 'asc')->get();
+
+            // Retorna a visualização com a lista de assuntos
+            return view($this->getPathView(), compact('assuntos'));
+
+        } catch (Exception $e) {
+            // Captura qualquer outra exceção inesperada e trata com o método handleException
+            return $this->handleException($e, 'Ocorreu um erro inesperado.');
+        }
     }
 
     /**
@@ -32,7 +44,7 @@ class AssuntoController extends Controller
      */
     public function create()
     {
-        return view('assuntos.create');
+        return view($this->getPathView());
     }
 
     /**
@@ -42,41 +54,48 @@ class AssuntoController extends Controller
      * criado e um código de status 201.
      * Caso contrário, o usuário é redirecionado para a rota "assuntos.index" com mensagem de sucesso.
      *
-     * @param Request $request A instância de solicitação HTTP que contém dados de entrada.
-     * @return JsonResponse|RedirectResponse O objeto de resposta, JSON ou um redirecionamento.
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function store(Request $request)
     {
+        // Valida os dados de entrada antes do try/catch
         $request->validate($this->getValidatorInput(), $this->getValidatorMessage());
 
-        $assunto = Assunto::create($request->all());
+        try {
+            // Cria o registro no banco de dados
+            $assunto = Assunto::create($request->all());
 
-        if ($request->header('X-Test-Origin') === 'true') {
-            return response()->json($assunto, Response::HTTP_CREATED);
+            // Retorna sucesso
+            return redirect()->route($this->getPathView())->with('success', 'Assunto criado com sucesso!');
+        } catch (Exception $e) {
+            // Lida com exceções inesperadas
+            return $this->handleException($e, 'Ocorreu um erro ao criar o assunto.');
         }
-
-        return redirect()->route('assuntos.index')->with('success', 'Assunto criado com sucesso!');
     }
 
     /**
-     * Recupera o registro "Assunto" pelo ‘ID’ informado e carrega os seus livros relacionados,
-     * então retorna uma visão com os dados para exibição.
+     * Exibe os detalhes de um registro "Assunto" identificado pelo ID fornecido e exibe sua visão.
      *
-     * Se o registro "Assunto" correspondente ao ‘ID’ fornecido não for encontrado, uma exceção será lançada.
+     * Este método tenta recuperar o registro "Assunto" pelo ID. Em caso de sucesso, retorna a visão
+     * com os detalhes do "Assunto" e seus "livros" associados. Caso contrário, lida com diferentes tipos
+     * de exceções, incluindo a ausência de registros, IDs inválidos ou erros inesperados.
      *
-     * @param int $id O identificador único do registro "Assunto" a ser exibido.
-     * @return View A visão que exibe o "Assunto" e os livros associados.
+     * @param mixed $id O identificador do registro "Assunto" que será exibido.
+     * @return Factory|View|Application|RedirectResponse A visão com os detalhes do registro ou um redirecionamento em caso de erro.
      */
     public function show($id)
     {
+        try {
+            $assunto = Assunto::findOrFail($id);
+            $livros = $assunto->livros;
 
-        if (!$id) {
-            throw new InvalidArgumentExceptionAlias('O ID fornecido é inválido.');
+            return view($this->getPathView(), compact('assunto', 'livros'));
+
+        } catch (Exception $e) {
+            // Lida com exceções inesperadas
+            return $this->handleException($e, 'Ocorreu um erro ao atualizar o assunto.');
         }
-        $assunto = Assunto::findOrFail($id);
-        $livros = $assunto->livros;
-
-        return view('assuntos.show', compact('assunto', 'livros'));
     }
 
     /**
@@ -84,13 +103,17 @@ class AssuntoController extends Controller
      *
      * Caso o registro não seja encontrado, uma exceção será lançada.
      *
-     * @param mixed $id O identificador do registro "Assunto" a ser editado.
-     * @return View A visão que contém o formulário de edição do registro.
+     * @param $id
+     * @return Factory|\Illuminate\Contracts\View\View|Application|RedirectResponse
      */
     public function edit($id)
     {
-        $assunto = Assunto::findOrFail($id);
-        return view('assuntos.edit', compact('assunto'));
+        try {
+            $assunto = Assunto::findOrFail($id);
+            return view($this->getPathView(), compact('assunto'));
+        } catch (Exception $e) {
+            return $this->handleException($e, 'Ocorreu um erro ao atualizar o assunto.');
+        }
     }
 
     /**
@@ -107,10 +130,14 @@ class AssuntoController extends Controller
     {
         $request->validate($this->getValidatorInput(), $this->getValidatorMessage());
 
-        $assunto = Assunto::findOrFail($id);
-        $assunto->update($request->all());
+        try {
+            $assunto = Assunto::findOrFail($id);
+            $assunto->update($request->all());
 
-        return redirect()->route('assuntos.index')->with('success', 'Assunto atualizado com sucesso!');
+            return redirect()->route($this->getPathView())->with('success', 'Assunto atualizado com sucesso!');
+        } catch (Exception $e) {
+            return $this->handleException($e, 'Ocorreu um erro ao atualizar o assunto.');
+        }
     }
 
     /**
@@ -125,10 +152,13 @@ class AssuntoController extends Controller
      */
     public function destroy($id)
     {
-        $assunto = Assunto::findOrFail($id);
-        $assunto->delete();
-
-        return redirect()->route('assuntos.index')->with('success', 'Assunto excluído com sucesso!');
+        try {
+            $assunto = Assunto::findOrFail($id);
+            $assunto->delete();
+            return redirect()->route($this->getPathView())->with('success', 'Assunto excluído com sucesso!');
+        } catch (Exception $e) {
+            return $this->handleException($e, 'Ocorreu um erro ao atualizar o assunto.');
+        }
     }
 
     /**
@@ -139,11 +169,9 @@ class AssuntoController extends Controller
      *
      * @return array Um array associativo contendo as regras de validação.
      */
-    private function getValidatorInput()
+    public function getValidatorInput()
     {
-        return [
-            'str_descricao' => 'required|string|max:20',
-        ];
+        return ['str_descricao' => 'required|string|max:20'];
     }
 
     /**
@@ -154,10 +182,8 @@ class AssuntoController extends Controller
      *
      * @return array Um array associativo contendo os atributos e suas respectivas mensagens de validação.
      */
-    private function getValidatorMessage()
+    public function getValidatorMessage()
     {
-        return [
-            'str_descricao.max' => 'O campo Descrição deve conter no máximo 20 caracteres.',
-        ];
+        return ['str_descricao.max' => 'O campo Descrição deve conter no máximo 20 caracteres.'];
     }
 }
