@@ -3,7 +3,6 @@
 @section('content')
     <h1>Lista de Livros</h1>
 
-    <!-- Exibir mensagem de sucesso se houver -->
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -30,9 +29,6 @@
             <tbody>
 
             @foreach ($livros as $livro)
-                {{--                @if($livro->codigo == 19)--}}
-                {{--                    @dd($livro->num_valor, number_format($livro->num_valor, 2, ',', '.'))--}}
-                {{--                @endif--}}
                 <tr>
                     <td>{{ $livro->str_titulo }}</td>
                     <td>{{ $livro->autores->implode('str_nome', ', ') }}</td>
