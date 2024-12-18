@@ -68,8 +68,8 @@ abstract class Controller implements Validatable
             // Caso contrário, usa o nome do método como nome da view
             $viewName = $callingMethod === 'handleException' ? 'index' : $callingMethod;
         }
+        $controllerBaseName = ($controllerBaseName !== 'Autor') ? $controllerBaseName : 'autore';
 
-        // Retorna o caminho da view no formato correto (exemplo: 'assuntos.index')
         return strtolower($controllerBaseName) . 's.' . $viewName;
     }
 }

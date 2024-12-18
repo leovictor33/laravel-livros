@@ -172,7 +172,7 @@ class AssuntoController extends Controller
      *
      * @return array Um array associativo contendo as regras de validação.
      */
-    public function getValidatorInput()
+    public function getValidatorInput(): array
     {
         return ['str_descricao' => 'required|string|max:20'];
     }
@@ -185,7 +185,7 @@ class AssuntoController extends Controller
      *
      * @return array Um array associativo contendo os atributos e suas respectivas mensagens de validação.
      */
-    public function getValidatorMessage()
+    public function getValidatorMessage(): array
     {
         return ['str_descricao.max' => 'O campo Descrição deve conter no máximo 20 caracteres.'];
     }
