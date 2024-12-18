@@ -134,12 +134,11 @@ class LivroController extends Controller
     {
         $livros = $autor->livros()->with(['autores', 'assuntos'])->get();
 
-        $pdf = SnappyPdf::loadView('relatorios.livros_por_autor', compact('livros', 'autor'));
+        $pdf = SnappyPdf::loadView('relatorios.livros_por_autor', compact('livros', 'autor'))
+            ->setOption('enable-local-file-access', true)
+            ->setPaper('a4', 'portrait'); // Definindo o tamanho e orientação do papel
 
-        // Configurando o cabeçalho para forçar o download
-        return response($pdf->output(), 200)
-            ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'attachment; filename="livros_por_' . $autor->str_nome . '.pdf"');
+        return $pdf->download('livros_por_' . $autor->str_nome . '.pdf');
     }
 
     private function getValidatorInput()
