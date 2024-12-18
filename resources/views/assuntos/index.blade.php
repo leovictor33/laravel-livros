@@ -3,7 +3,6 @@
 @section('content')
     <h1>Lista de Assuntos</h1>
 
-    <!-- Exibir mensagem de sucesso se houver -->
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -37,7 +36,6 @@
                             </button>
                         </form>
 
-                        <!-- Botão para gerar relatório dos livros desse assunto -->
                         <a href="{{ route('assuntos.relatorio', $assunto->codigo) }}" class="btn btn-warning btn-sm">
                             Gerar Relatório de Livros
                         </a>

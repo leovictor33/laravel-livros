@@ -3,7 +3,6 @@
 @section('content')
     <h1>Adicionar Novo Livro</h1>
 
-    <!-- Botão Voltar -->
     <a href="{{ route('livros.index') }}" class="btn btn-secondary mb-3">Voltar à lista</a>
 
     <form action="{{ route('livros.store') }}" method="POST">
