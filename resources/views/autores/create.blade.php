@@ -9,9 +9,10 @@
 
     <form action="{{ route('autores.store') }}" method="POST">
         @csrf
-        <div class="form-group">
-            <label for="str_nome">Nome do Autor(a)</label>
-            <input type="text" id="str_nome" name="str_nome" class="form-control" value="{{ old('str_nome') }}" required>
+        <div class="mb-3">
+            <label for="str_nome" class="form-label">Título</label>
+            <input type="text" name="str_nome" id="str_nome" class="form-control" value="{{ old('str_nome') }}"
+                   required>
             @error('str_nome')
             <div class="text-danger">{{ $message }}</div>
             @enderror

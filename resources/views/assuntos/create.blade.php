@@ -10,8 +10,9 @@
     <form action="{{ route('assuntos.store') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="str_descricao" class="form-label">Descrição</label>
-            <input type="text" class="form-control" id="str_descricao" name="str_descricao" required>
+            <label for="str_descricao" class="form-label">Título</label>
+            <input type="text" name="str_descricao" id="str_descricao" class="form-control" value="{{ old('str_descricao') }}"
+                   required>
             @error('str_descricao')
             <div class="text-danger">{{ $message }}</div>
             @enderror
