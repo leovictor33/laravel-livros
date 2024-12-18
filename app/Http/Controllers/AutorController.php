@@ -109,7 +109,6 @@ class AutorController extends Controller
      */
     public function edit($id)
     {
-        $id = false;
         try {
             $autor = Autor::findOrFail($id);
             return view($this->getPathView(), compact('autor'));
