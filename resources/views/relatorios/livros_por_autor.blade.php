@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>Livros de {{ $autor->str_nome }}</title>
@@ -37,6 +37,7 @@
         <th>Título</th>
         <th>Editora</th>
         <th>Ano de Publicação</th>
+        <th>Valor</th>
         <th>Assuntos</th>
     </tr>
     </thead>
@@ -46,6 +47,7 @@
             <td>{{ $livro->str_titulo }}</td>
             <td>{{ $livro->str_editora }}</td>
             <td>{{ $livro->num_ano_publicacao }}</td>
+            <td>R$ {{ number_format($livro->num_valor, 2, ',', '.') }}</td>
             <td>{{ $livro->assuntos->pluck('str_descricao')->join(', ') }}</td>
         </tr>
     @endforeach
