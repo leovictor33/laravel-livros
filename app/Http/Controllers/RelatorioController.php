@@ -7,7 +7,7 @@ use Barryvdh\Snappy\Facades\SnappyPdf;
 use App\Models\Autor;
 use Illuminate\Support\Facades\DB;
 
-class RelatorioController extends Controller
+class RelatorioController
 {
     public function livros()
     {

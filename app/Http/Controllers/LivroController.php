@@ -132,7 +132,7 @@ class LivroController extends Controller
         return $pdf->download('livros_por_' . $autor->str_nome . '.pdf');
     }
 
-    private function getValidatorInput()
+    public function getValidatorInput()
     {
         return [
             'str_titulo'         => 'required|string|max:40',
@@ -144,7 +144,7 @@ class LivroController extends Controller
         ];
     }
 
-    private function getValidatorMessage()
+    public function getValidatorMessage()
     {
         return [
             'num_ano_publicacao.required' => 'O campo Ano de Publicação é obrigatório.',

@@ -65,14 +65,14 @@ class AutorController extends Controller
         return redirect()->route('autores.index')->with('success', 'Autor excluído com sucesso!');
     }
 
-    private function getValidatorInput()
+    public function getValidatorInput()
     {
         return [
             'str_nome' => 'required|string|max:40',
         ];
     }
 
-    private function getValidatorMessage()
+    public function getValidatorMessage()
     {
         return [
             'str_nome.max' => 'O campo Nome do Autor(a) deve conter no máximo 40 caracteres.',
