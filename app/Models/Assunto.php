@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @method static findOrFail(mixed $codigo)
+ * @method static orderBy(string $string, string $string1)
  */
 class Assunto extends Model
 {
