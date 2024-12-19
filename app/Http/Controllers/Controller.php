@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contracts\Validatable;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
@@ -15,10 +16,11 @@ abstract class Controller implements Validatable
      *
      * @param Exception $e A exceção a ser tratada.
      * @param string $message Uma mensagem de erro a ser armazenada na sessão.
+     * @param string|null $view
      * @param array $routeParams Parâmetros a serem passados para a rota de redirecionamento.
-     * @return RedirectResponse Uma resposta de redirecionamento para a rota especificada com erros.
+     * @return Response|RedirectResponse Uma resposta de redirecionamento para a rota especificada com erros.
      */
-    protected function handleException(Exception $e, string $message, array $routeParams = []): RedirectResponse
+    protected function handleException(Exception $e, string $message, string $view = null, array $routeParams = []): Response|RedirectResponse
     {
         // Logar a exceção para monitoramento
         Log::error($e->getMessage(), [
@@ -32,20 +34,33 @@ abstract class Controller implements Validatable
             'code'    => $e->getCode(),
         ]);
 
-        // Redirecionar para a rota com erros
+        // Se uma view específica for fornecida, renderize-a
+        if ($view) {
+            return response()->view($view, [
+                'error'     => $message,
+                'exception' => [
+                    'message' => $e->getMessage(),
+                    'code'    => $e->getCode(),
+                ],
+            ], 500); // HTTP status code 500 (erro interno do servidor)
+        }
+
+        // Redirecionar para a rota padrão com erros
         return redirect()->route($this->getPathView(), $routeParams)->withErrors(['error' => $message]);
     }
-
 
     /**
      * Retorna o caminho da visualização baseado no nome do método chamador e no nome da classe do controlador.
      *
      * @return string O caminho formatado da visualização.
      */
-    protected function getPathView()
+    protected function getPathView(): string
     {
         // Obtém o nome do método que está chamando a função
         $callingMethod = debug_backtrace()[1]['function'];
+
+        // Converte o nome do método de camelCase para snake_case
+        $snakeCaseMethod = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $callingMethod));
 
         // Obtém o nome da classe atual (controller)
         $controllerClass = get_class($this);
@@ -57,7 +72,7 @@ abstract class Controller implements Validatable
         $methodViewMapping = [
             'update'  => 'index', // Exemplo: o método update redireciona para a view 'index'
             'store'   => 'index', // O método store pode redirecionar para 'index'
-            'destroy' => 'index', // O método store pode redirecionar para 'index'
+            'destroy' => 'index', // O método destroy redireciona para 'index'
             // Adicione mais mapeamentos conforme sua necessidade
         ];
 
@@ -65,11 +80,14 @@ abstract class Controller implements Validatable
         if (array_key_exists($callingMethod, $methodViewMapping)) {
             $viewName = $methodViewMapping[$callingMethod];
         } else {
-            // Caso contrário, usa o nome do método como nome da view
-            $viewName = $callingMethod === 'handleException' ? 'index' : $callingMethod;
+            // Caso contrário, usa o nome do método convertido para snake_case como nome da view
+            $viewName = $snakeCaseMethod === 'handle_exception' ? 'index' : $snakeCaseMethod;
         }
-        $controllerBaseName = ($controllerBaseName !== 'Autor') ? $controllerBaseName : 'autore';
 
+        // Ajusta o nome base do controlador (exceção para Autor -> Autores)
+        $controllerBaseName = ($controllerBaseName !== 'Autor') ? $controllerBaseName : 'Autore';
+
+        // Retorna o caminho da view no formato snake_case
         return strtolower($controllerBaseName) . 's.' . $viewName;
     }
 }

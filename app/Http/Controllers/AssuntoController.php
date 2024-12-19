@@ -97,7 +97,7 @@ class AssuntoController extends Controller
 
         } catch (Exception $e) {
             // Lida com exceções inesperadas
-            return $this->handleException($e, 'Ocorreu um erro ao atualizar o assunto.');
+            return $this->handleException($e, 'Ocorreu um erro ao visualizar o assunto.');
         }
     }
 

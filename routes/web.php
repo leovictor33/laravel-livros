@@ -18,9 +18,11 @@ Route::resource('autores', AutorController::class);
 Route::resource('assuntos', AssuntoController::class);
 
 //Relatorio Livro
-
 Route::get('/relatorios/livros', [RelatorioController::class, 'livros'])
     ->name('relatorios.livros');
+
+Route::get('/relatorios/erro', [RelatorioController::class, 'erro'])->name('relatorios.erro');
+
 
 Route::get('/relatorio/livros/por-assunto/{assuntoId}', [RelatorioController::class, 'gerarRelatorioPorAssunto'])
     ->name('assuntos.relatorio');
