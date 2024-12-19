@@ -32,15 +32,13 @@ class RelatorioController extends Controller
     public function livros()
     {
         try {
-            $autores = Autor::with($this->getPathView())->orderBy('str_nome')->get();
+            $autores = Autor::with('livros')->orderBy('str_nome')->get();
 
-            $pdf = SnappyPdf::loadView('relatorios.livros', compact('autores'))
+            $pdf = SnappyPdf::loadView($this->getPathView(), compact('autores'))
                 ->setOption('enable-local-file-access', true)
                 ->setPaper('a4', 'portrait');
 
             return $pdf->download('relatorio_livros.pdf');
-        } catch (ModelNotFoundException $e) {
-            return $this->handleException($e, 'Nenhum autor ou livro encontrado para gerar o relatório.');
         } catch (Exception $e) {
             return $this->handleException($e, 'Ocorreu um erro ao gerar o relatório de livros.');
         }
@@ -49,29 +47,51 @@ class RelatorioController extends Controller
     /**
      * Gera um relatório em PDF associado a um tema (assunto) específico.
      *
-     * @param int $assuntoId O ‘ID’ do assunto para filtrar os livros.
+     * @param Assunto $assunto O ‘ID’ do assunto para filtrar os livros.
      * @return RedirectResponse|Response O arquivo PDF gerado para download ou uma mensagem de erro.
      */
-    public function gerarRelatorioPorAssunto($assuntoId)
+    public function porAssunto(Assunto $assunto)
     {
         try {
-            $assunto = Assunto::findOrFail($assuntoId);
-
             $livros = DB::table('livros_por_assunto')
-                ->where('assunto_id', $assuntoId)
+                ->where('assunto_id', $assunto->codigo)
                 ->get();
+            $strDescricao = $assunto->str_descricao;
 
-            $strAssunto = $assunto->str_descricao;
-
-            $pdf = SnappyPdf::loadView($this->getPathView(), compact('livros', 'strAssunto'))
+            $pdf = SnappyPdf::loadView($this->getPathView(), compact('livros', 'strDescricao'))
                 ->setOption('enable-local-file-access', true)
                 ->setPaper('a4', 'portrait');
 
-            return $pdf->download('Livros_sobre_' . $strAssunto . '.pdf');
-        } catch (ModelNotFoundException $e) {
-            return $this->handleException($e, 'Assunto não encontrado para gerar o relatório.', 'relatorios.erro');
+            return $pdf->download('Livros_sobre_' . $strDescricao . '.pdf');
         } catch (Exception $e) {
             return $this->handleException($e, 'Ocorreu um erro ao gerar o relatório por assunto.', 'relatorios.erro');
+        }
+    }
+
+    /**
+     * Gera um relatório em PDF contendo os livros relacionados a um autor específico.
+     *
+     * Este método utiliza o autor fornecido como parâmetro para buscar todos os livros associados,
+     * carregando também os relacionamentos de autores e assuntos dos livros. A partir desses dados,
+     * um arquivo PDF é gerado com a ajuda da biblioteca SnappyPDF. O PDF é então enviado para download
+     * com o nome do arquivo baseado no nome do autor.
+     *
+     * @param Autor $autor Objeto do modelo Autor, representando o autor cujos livros serão listados no relatório.
+     * @return Response|RedirectResponse Retorna o PDF gerado com sucesso para
+     * download ou uma resposta de erro caso ocorra uma exceção.
+     */
+    public function porAutor(Autor $autor)
+    {
+        try {
+            $livros = $autor->livros()->with(['autores', 'assuntos'])->get();
+
+            $pdf = SnappyPdf::loadView($this->getPathView(), compact('livros', 'autor'))
+                ->setOption('enable-local-file-access', true)
+                ->setPaper('a4', 'portrait'); // Definindo o tamanho e orientação do papel
+
+            return $pdf->download('livros_por_' . $autor->str_nome . '.pdf');
+        } catch (Exception $e) {
+            return $this->handleException($e, 'Ocorreu um erro ao gerar o relatório por autor.', 'relatorios.erro');
         }
     }
 

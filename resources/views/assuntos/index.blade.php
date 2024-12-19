@@ -51,7 +51,7 @@
                             </button>
                         </form>
 
-                        <a href="{{ route('assuntos.relatorio', $assunto->codigo) }}" class="btn btn-warning btn-sm">
+                        <a href="{{ route('relatorios.assunto', $assunto->codigo) }}" class="btn btn-warning btn-sm">
                             Gerar Relatório de Livros
                         </a>
                     </td>

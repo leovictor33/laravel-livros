@@ -53,7 +53,7 @@
                             </button>
                         </form>
 
-                        <a href="{{ route('autores.relatorio', $autor->codigo) }}" class="btn btn-warning btn-sm">
+                        <a href="{{ route('relatorios.autor', $autor->codigo) }}" class="btn btn-warning btn-sm">
                             Gerar Relatório de Livros
                         </a>
                     </td>

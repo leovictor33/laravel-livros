@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livros sobre {{ $strAssunto }}</title>
+    <title>Livros sobre {{ $strDescricao }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-<h1>Livros sobre {{ $strAssunto }}</h1>
+<h1>Livros sobre {{ $strDescricao }}</h1>
     <table>
         <thead>
         <tr>

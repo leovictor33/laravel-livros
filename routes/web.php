@@ -7,9 +7,11 @@ use App\Http\Controllers\AutorController;
 use App\Http\Controllers\AssuntoController;
 use App\Http\Controllers\RelatorioController;
 
+
 //Livros
-Route::get('/', [LivroController::class, 'index'])->name('livros.index');
 Route::resource('livros', LivroController::class);
+//No load da aplicação, redireciona para lista livro
+Route::get('/', [LivroController::class, 'index'])->name('livros.index');
 
 //autores
 Route::resource('autores', AutorController::class);
@@ -21,12 +23,8 @@ Route::resource('assuntos', AssuntoController::class);
 Route::get('/relatorios/livros', [RelatorioController::class, 'livros'])
     ->name('relatorios.livros');
 
-Route::get('/relatorios/erro', [RelatorioController::class, 'erro'])->name('relatorios.erro');
+Route::get('/relatorios/por-assunto/{assunto}', [RelatorioController::class, 'porAssunto'])
+    ->name('relatorios.assunto');
 
-
-Route::get('/relatorio/livros/por-assunto/{assuntoId}', [RelatorioController::class, 'gerarRelatorioPorAssunto'])
-    ->name('assuntos.relatorio');
-
-Route::get('autores/{autor}/relatorio', [LivroController::class, 'gerarRelatorioLivrosPorAutor'])
-    ->name('autores.relatorio');
-
+Route::get('/relatorios/por-autor/{autor}', [RelatorioController::class, 'porAutor'])
+    ->name('relatorios.autor');

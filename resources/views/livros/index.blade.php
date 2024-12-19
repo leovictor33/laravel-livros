@@ -9,6 +9,21 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if(session('exception'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Detalhes da Exceção:</strong>
+            <pre>{{ session('exception.message') }}</pre>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
     <div style="display: inline;">
         <a href="{{ route('livros.create') }}" class="btn btn-success btn-sm mb-3">Adicionar Novo Livro</a>
         <a href="{{ route('relatorios.livros') }}" class="btn btn-warning btn-sm mb-3">Gerar Relatório</a>
