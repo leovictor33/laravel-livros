@@ -47,7 +47,7 @@ class RelatorioController extends Controller
     /**
      * Gera um relatório em PDF associado a um tema (assunto) específico.
      *
-     * @param Assunto $assunto O ‘ID’ do assunto para filtrar os livros.
+     * @param Assunto $assunto Objeto do modelo Assunto, representando os assuntos cujos livros serão listados no relatório.
      * @return RedirectResponse|Response O arquivo PDF gerado para download ou uma mensagem de erro.
      */
     public function porAssunto(Assunto $assunto)

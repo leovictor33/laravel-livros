@@ -22,7 +22,7 @@ abstract class Controller implements Validatable
      */
     protected function handleException(Exception $e, string $message, string $view = null, array $routeParams = []): Response|RedirectResponse
     {
-        // Logar a exceção para monitoramento
+        // Log a exceção para monitoramento
         Log::error($e->getMessage(), [
             'exception' => $e->getTraceAsString(), // Apenas o stack trace como string
         ]);
@@ -50,9 +50,13 @@ abstract class Controller implements Validatable
     }
 
     /**
-     * Retorna o caminho da visualização baseado no nome do método chamador e no nome da classe do controlador.
+     * Obtém o caminho da visualização baseado no nome do método chamador e no nome da classe do controlador.
      *
-     * @return string O caminho formatado da visualização.
+     * O método extrai o nome do método chamador, converte-o para o formato `snake_case` e combina
+     * com o nome do controlador para formar o caminho da visualização. Ele também permite mapeamento
+     * de métodos específicos para views customizadas.
+     *
+     * @return string O caminho formatado da visualização, em notação `snake_case`.
      */
     protected function getPathView(): string
     {
