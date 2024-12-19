@@ -22,7 +22,7 @@ class AssuntoFactory extends Factory
     public function definition()
     {
         return [
-            'str_descricao' => $this->faker->name(), // Gerar um nome aleatório
+            'str_descricao' => $this->faker->regexify('[A-Za-z0-9]{20}'),
         ];
     }
 }

@@ -22,7 +22,7 @@ class AutorFactory extends Factory
     public function definition()
     {
         return [
-            'str_nome' => $this->faker->name(), // Gerar um nome aleatório
+            'str_nome' => $this->faker->regexify('[A-Za-z0-9]{40}'),
         ];
     }
 }

@@ -13,7 +13,7 @@ class AssuntoTest extends TestCase
     public function criar_assunto()
     {
         $data = [
-            'str_descricao'         => 'Novo Assunto',
+            'str_descricao' => 'Novo Assunto',
         ];
 
         $response = $this->post(route('assuntos.store'), $data, ['X-Test-Origin' => 'true']);
