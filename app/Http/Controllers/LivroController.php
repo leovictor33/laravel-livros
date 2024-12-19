@@ -235,35 +235,6 @@ class LivroController extends Controller
         return $arrData;
     }
 
-
-    /**
-     * Gera um relatório em PDF contendo os livros relacionados a um autor específico.
-     *
-     * Este método utiliza o autor fornecido como parâmetro para buscar todos os livros associados,
-     * carregando também os relacionamentos de autores e assuntos dos livros. A partir desses dados,
-     * um arquivo PDF é gerado com a ajuda da biblioteca SnappyPDF. O PDF é então enviado para download
-     * com o nome do arquivo baseado no nome do autor.
-     *
-     * @param Autor $autor Objeto do modelo Autor, representando o autor cujos livros serão listados no relatório.
-     * @return \Illuminate\Http\Response|RedirectResponse Retorna o PDF gerado com sucesso para
-     * download ou uma resposta de erro caso ocorra uma exceção.
-     */
-    public function gerarRelatorioLivrosPorAutor(Autor $autor)
-    {
-        try {
-            $livros = $autor->livros()->with(['autores', 'assuntos'])->get();
-
-            $pdf = SnappyPdf::loadView('relatorios.livros_por_autor', compact('livros', 'autor'))
-                ->setOption('enable-local-file-access', true)
-                ->setPaper('a4', 'portrait'); // Definindo o tamanho e orientação do papel
-
-            return $pdf->download('livros_por_' . $autor->str_nome . '.pdf');
-        } catch (Exception $e) {
-            // Captura qualquer outra exceção inesperada e trata com o método handleException
-            return $this->handleException($e, 'Ocorreu um erro inesperado.');
-        }
-    }
-
     /**
      * Retorna as regras de validação para os dados de entrada do modelo.
      *
