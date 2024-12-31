@@ -24,5 +24,20 @@ class Autor extends Model
     {
         return $this->belongsToMany(Livro::class, 'tb_livro_autor', 'codigo_autor', 'codigo_livro');
     }
+
+    /**
+     * Exceção para delete de autor que possua relacionamento com algum livro
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($autor) {
+            if ($autor->livros()->exists()) {
+                throw new \Exception("O autor(a) '".$autor['str_nome']."' está relacionado(a) a um ou mais livros e não pode ser excluído.");
+            }
+        });
+    }
 }
 
