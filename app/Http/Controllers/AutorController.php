@@ -138,7 +138,7 @@ class AutorController extends Controller
             $autor = Autor::findOrFail($id);
             $autor->update($request->all());
 
-            return redirect()->route('autores.index')->with('success', 'Autor atualizado com sucesso!');
+            return redirect()->route($this->getPathView())->with('success', 'Autor atualizado com sucesso!');
         } catch (Exception $e) {
             return $this->handleException($e, 'Ocorreu um erro ao atualizar o autor.');
         }
@@ -160,9 +160,9 @@ class AutorController extends Controller
             $autor = Autor::findOrFail($id);
             $autor->delete();
 
-            return redirect()->route('autores.index')->with('success', 'Autor excluído com sucesso!');
+            return redirect()->route($this->getPathView())->with('success', 'Autor excluído com sucesso!');
         } catch (Exception $e) {
-            return $this->handleException($e, 'Ocorreu um erro ao atualizar o assunto.');
+            return $this->handleException($e, 'Ocorreu um erro ao excluir o autor(a).');
         }
     }
 
